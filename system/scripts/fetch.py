@@ -54,6 +54,18 @@ KEYWORDS = [
 
 KEYWORD_RE = re.compile(r"\b(" + "|".join(re.escape(k) for k in KEYWORDS) + r")\b", re.I)
 
+TZINFOS = {
+    "UTC": 0,
+    "EST": -5 * 3600,
+    "EDT": -4 * 3600,
+    "CST": -6 * 3600,
+    "CDT": -5 * 3600,
+    "MST": -7 * 3600,
+    "MDT": -6 * 3600,
+    "PST": -8 * 3600,
+    "PDT": -7 * 3600,
+}
+
 MAGAZINE_IMAGE_URL = (
     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Hacker_illustration_20181205.jpg/1023px-Hacker_illustration_20181205.jpg"
 )
@@ -182,7 +194,7 @@ def parse_date(entry: feedparser.FeedParserDict) -> Optional[datetime]:
     for key in ("published", "updated", "created"):
         if key in entry:
             try:
-                return date_parser.parse(entry[key])
+                return date_parser.parse(entry[key], tzinfos=TZINFOS)
             except Exception:
                 continue
     if "published_parsed" in entry and entry.published_parsed:
