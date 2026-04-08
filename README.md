@@ -2,7 +2,7 @@
 
 Welcome to a daily, magazine‑style digest of hacking and cybersecurity news, advisories, and research highlights.
 
-**Latest issue:** See the newest folder in `issues/` (each issue is a `README.md`)  
+**Latest issue:** See the newest folder in `News/` (each issue is a `README.md`)  
 Each day a new dated issue is published in Markdown, ready to read like a quick morning magazine.
 
 ![Hacker illustration](https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Hacker_illustration_20181205.jpg/1280px-Hacker_illustration_20181205.jpg)

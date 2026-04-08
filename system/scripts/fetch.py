@@ -17,7 +17,7 @@ import yaml
 from dateutil import parser as date_parser
 
 ROOT = Path(__file__).resolve().parents[2]
-ISSUES_DIR = ROOT / "issues"
+ISSUES_DIR = ROOT / "News"
 SOURCES_PATH = ROOT / "system" / "sources.yaml"
 
 KEYWORDS = [
