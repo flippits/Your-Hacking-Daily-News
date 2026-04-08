@@ -2,7 +2,7 @@
 
 _A clean, daily hacking magazine with the best stories, advisories, and research — in plain language._
 
-![Hacker illustration](https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Hacker_illustration_20181205.jpg/1280px-Hacker_illustration_20181205.jpg)
+![Hacker illustration](https://upload.wikimedia.org/wikipedia/commons/4/4d/Hacker_illustration_20181205.jpg)
 
 ---
 

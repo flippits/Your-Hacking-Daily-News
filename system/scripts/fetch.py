@@ -68,11 +68,11 @@ TZINFOS = {
 
 MAGAZINE_IMAGES = [
     (
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Hacker_illustration_20181205.jpg/1280px-Hacker_illustration_20181205.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/4/4d/Hacker_illustration_20181205.jpg",
         "Hacker illustration 20181205 by Santeri Viinamäki (CC BY-SA 4.0)",
     ),
     (
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Hacker_illustration_20181205.jpg/1023px-Hacker_illustration_20181205.jpg",
+        "https://upload.wikimedia.org/wikipedia/commons/4/4d/Hacker_illustration_20181205.jpg",
         "Hacker illustration 20181205 by Santeri Viinamäki (CC BY-SA 4.0)",
     ),
 ]
