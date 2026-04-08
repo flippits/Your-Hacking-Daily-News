@@ -5,7 +5,7 @@ import re
 import sys
 from collections import Counter
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Iterable, List, Optional
 import subprocess
@@ -66,10 +66,16 @@ TZINFOS = {
     "PDT": -7 * 3600,
 }
 
-MAGAZINE_IMAGE_URL = (
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Hacker_illustration_20181205.jpg/1280px-Hacker_illustration_20181205.jpg"
-)
-MAGAZINE_IMAGE_CREDIT = "Hacker illustration 20181205 by Santeri Viinamäki (CC BY-SA 4.0)"
+MAGAZINE_IMAGES = [
+    (
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Hacker_illustration_20181205.jpg/1280px-Hacker_illustration_20181205.jpg",
+        "Hacker illustration 20181205 by Santeri Viinamäki (CC BY-SA 4.0)",
+    ),
+    (
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Hacker_illustration_20181205.jpg/1023px-Hacker_illustration_20181205.jpg",
+        "Hacker illustration 20181205 by Santeri Viinamäki (CC BY-SA 4.0)",
+    ),
+]
 
 GEAR_KEYWORDS = [
     "cve",
@@ -302,12 +308,16 @@ def mini_article(text: str, max_len: int = 360) -> str:
 
 
 def render_magazine(items: List[Item], date_str: str) -> str:
+    hero_idx = abs(hash(date_str)) % len(MAGAZINE_IMAGES)
+    hero_url, hero_credit = MAGAZINE_IMAGES[hero_idx]
+    cover_url, cover_credit = MAGAZINE_IMAGES[(hero_idx + 1) % len(MAGAZINE_IMAGES)]
+
     lines = [
         f"# Your Hacking Daily News — {date_str}",
         "",
         "_A clean, daily hacking magazine with the best stories, advisories, and research — in plain language._",
         "",
-        f"![Hacker illustration]({MAGAZINE_IMAGE_URL})",
+        f"![Hacker illustration]({hero_url})",
         "",
         "---",
         "",
@@ -322,6 +332,8 @@ def render_magazine(items: List[Item], date_str: str) -> str:
         "## Editor's Note",
         "",
         "Fresh security updates and threat intel highlights, distilled for a quick read — no digging required.",
+        "",
+        f"![Security cover]({cover_url})",
         "",
     ]
 
@@ -406,29 +418,86 @@ def render_magazine(items: List[Item], date_str: str) -> str:
     lines.append("")
     lines.append("_More tomorrow. Stay patched and stay sharp._")
     lines.append("")
-    lines.append(f"_Image credit:_ {MAGAZINE_IMAGE_CREDIT}")
+    lines.append(f"_Image credits:_ {hero_credit}; {cover_credit}")
     lines.append("")
 
     return "\n".join(lines) + "\n"
 
 
+def render_weekly(items: List[Item], week_start: datetime, week_end: datetime) -> str:
+    week_label = f"{week_start.date().isoformat()} to {week_end.date().isoformat()}"
+    hero_idx = abs(hash(week_label)) % len(MAGAZINE_IMAGES)
+    hero_url, hero_credit = MAGAZINE_IMAGES[hero_idx]
+    cover_url, cover_credit = MAGAZINE_IMAGES[(hero_idx + 1) % len(MAGAZINE_IMAGES)]
+
+    lines = [
+        f"# Your Hacking Weekly Recap — {week_label}",
+        "",
+        "_The biggest security stories, advisories, and research from the week._",
+        "",
+        f"![Hacking weekly hero]({hero_url})",
+        "",
+        "---",
+        "",
+    ]
+
+    videos = [i for i in items if is_youtube(i.link)]
+    news = [i for i in items if not is_youtube(i.link)]
+    gear = [i for i in news if is_gear_related(f\"{i.title} {i.summary}\")]
+    research = [i for i in news if is_research_related(f\"{i.title} {i.summary}\") and i not in gear]
+    general = [i for i in news if i not in gear and i not in research]
+
+    def render_section(title: str, section_items: List[Item], max_items: int) -> None:
+        lines.append(f\"## {title}\")
+        lines.append(\"\")
+        if not section_items:
+            lines.append(\"No items this week.\")
+            lines.append(\"\")
+            return
+        for item in section_items[:max_items]:
+            published = item.published[:10]
+            summary = mini_article(item.summary)
+            lines.append(f\"### {item.title}\")
+            lines.append(f\"_Source: {item.source} · {published}_\")
+            lines.append(\"\")
+            if summary:
+                lines.append(f\"**Mini‑article:** {summary}\")
+            lines.append(\"\")
+            lines.append(f\"_Read more:_ {item.link}\")
+            lines.append(\"\")
+
+    render_section(\"Top Stories\", general, 10)
+    render_section(\"Vulns & Patches\", gear, 6)
+    render_section(\"Research & Exploits\", research, 6)
+
+    lines.append(\"---\")
+    lines.append(\"\")
+    lines.append(f\"_Image credits:_ {hero_credit}; {cover_credit}\")
+    lines.append(\"\")
+    return \"\\n\".join(lines) + \"\\n\"
+
+
 def fetch_youtube_items(source: FeedSource, max_items: int = 6) -> List[Item]:
+    cookies_path = ROOT / "system" / "youtube_cookies.txt"
     try:
+        cmd = [
+            "yt-dlp",
+            "--dump-json",
+            "--ignore-errors",
+            "--no-warnings",
+            "--skip-download",
+            "--extractor-retries",
+            "1",
+            "--socket-timeout",
+            "10",
+            "--playlist-end",
+            str(max_items),
+            source.url,
+        ]
+        if cookies_path.exists():
+            cmd = ["yt-dlp", "--cookies", str(cookies_path)] + cmd[1:]
         result = subprocess.run(
-            [
-                "yt-dlp",
-                "--dump-json",
-                "--ignore-errors",
-                "--no-warnings",
-                "--skip-download",
-                "--extractor-retries",
-                "1",
-                "--socket-timeout",
-                "10",
-                "--playlist-end",
-                str(max_items),
-                source.url,
-            ],
+            cmd,
             check=True,
             capture_output=True,
             text=True,
@@ -520,6 +589,17 @@ def main() -> int:
     issue_dir.mkdir(parents=True, exist_ok=True)
     issue_md_path = issue_dir / "README.md"
     issue_md_path.write_text(latest_md, encoding="utf-8")
+
+    if date_obj.weekday() == 6:
+        week_end = datetime.combine(date_obj, datetime.min.time(), tzinfo=timezone.utc)
+        week_start = week_end - timedelta(days=6)
+        weekly_items = [
+            i for i in items if i.published_ts >= week_start.timestamp() and i.published_ts <= week_end.timestamp()
+        ]
+        weekly_dir = ISSUES_DIR / f"Weekly-{week_end.date().isocalendar()[0]}-W{week_end.date().isocalendar()[1]:02d}"
+        weekly_dir.mkdir(parents=True, exist_ok=True)
+        weekly_md_path = weekly_dir / "README.md"
+        weekly_md_path.write_text(render_weekly(weekly_items, week_start, week_end), encoding="utf-8")
     return 0
 
 
