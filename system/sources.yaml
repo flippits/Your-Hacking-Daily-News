@@ -1,0 +1,22 @@
+sources:
+  - name: Krebs on Security
+    url: https://krebsonsecurity.com/feed/
+    scope: hacking
+  - name: SANS ISC Diary (Title Only)
+    url: https://isc.sans.edu/rssfeed.xml
+    scope: hacking
+  - name: CISA Alerts
+    url: https://www.cisa.gov/uscert/ncas/alerts.xml
+    scope: hacking
+  - name: CISA Current Activity
+    url: https://www.cisa.gov/uscert/ncas/current-activity.xml
+    scope: hacking
+  - name: CISA Tips
+    url: https://www.cisa.gov/uscert/ncas/tips.xml
+    scope: hacking
+  - name: CISA Cybersecurity Advisories
+    url: https://www.cisa.gov/cybersecurity-advisories/cybersecurity-advisories.xml
+    scope: hacking
+  - name: Microsoft Security Update Guide (RSS)
+    url: https://api.msrc.microsoft.com/update-guide/rss
+    scope: hacking
