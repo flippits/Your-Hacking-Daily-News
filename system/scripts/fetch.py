@@ -68,12 +68,12 @@ TZINFOS = {
 
 MAGAZINE_IMAGES = [
     (
-        "https://upload.wikimedia.org/wikipedia/commons/4/4d/Hacker_illustration_20181205.jpg",
-        "Hacker illustration 20181205 by Santeri Viinamäki (CC BY-SA 4.0)",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Password_hacking_illustration.jpg/1280px-Password_hacking_illustration.jpg",
+        "Password hacking illustration by Santeri Viinamäki (CC BY-SA 4.0)",
     ),
     (
-        "https://upload.wikimedia.org/wikipedia/commons/4/4d/Hacker_illustration_20181205.jpg",
-        "Hacker illustration 20181205 by Santeri Viinamäki (CC BY-SA 4.0)",
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Password_hacking_illustration.jpg/1280px-Password_hacking_illustration.jpg",
+        "Password hacking illustration by Santeri Viinamäki (CC BY-SA 4.0)",
     ),
 ]
 

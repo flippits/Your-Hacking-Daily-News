@@ -13,7 +13,7 @@ Each day a new dated issue is published in Markdown, ready to read like a quick 
 
 **Magazine site:** Enable GitHub Pages from `/docs` to publish a clean front page.
 
-![Hacker illustration](https://upload.wikimedia.org/wikipedia/commons/4/4d/Hacker_illustration_20181205.jpg)
+![Password hacking illustration](https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Password_hacking_illustration.jpg/1280px-Password_hacking_illustration.jpg)
 
 **Image credit:**  
-Hacker illustration 20181205 by Santeri Viinamäki (CC BY‑SA 4.0).
+Password hacking illustration by Santeri Viinamäki (CC BY‑SA 4.0).
