@@ -2,7 +2,7 @@
 
 _A clean, daily hacking magazine with the best stories, advisories, and research — in plain language._
 
-![Hacker illustration](https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Hacker_illustration_20181205.jpg/1023px-Hacker_illustration_20181205.jpg)
+![Hacker illustration](https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Hacker_illustration_20181205.jpg/1280px-Hacker_illustration_20181205.jpg)
 
 ---
 
@@ -97,4 +97,3 @@ _Read more:_ https://krebsonsecurity.com/2026/04/russia-hacked-routers-to-steal-
 _More tomorrow. Stay patched and stay sharp._
 
 _Image credit:_ Hacker illustration 20181205 by Santeri Viinamäki (CC BY-SA 4.0)
-
