@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Your Hacking Daily News</title>
+    <style>
+      :root {
+        --bg: #07080b;
+        --card: #12141a;
+        --accent: #9b5cff;
+        --accent-2: #00e0a4;
+        --text: #f6f7f9;
+        --muted: #a8b0b8;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+        background: radial-gradient(1200px 600px at 10% 10%, #151827 0%, var(--bg) 60%);
+        color: var(--text);
+      }
+      .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 48px 20px 80px;
+      }
+      .hero {
+        background: linear-gradient(135deg, #0f1118 0%, #141a24 100%);
+        border: 1px solid #1f2632;
+        border-radius: 18px;
+        padding: 28px;
+        display: grid;
+        gap: 16px;
+      }
+      h1 { margin: 0; font-size: 38px; letter-spacing: -0.5px; }
+      .tagline { color: var(--muted); font-size: 16px; line-height: 1.5; }
+      .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+      .chip {
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #0f121a;
+        border: 1px solid #232a38;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+      .btn {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid #2a3344;
+        background: #0f131b;
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .btn.primary {
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+        color: #081016;
+        border: none;
+      }
+      .grid {
+        margin-top: 28px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid #1f2632;
+        border-radius: 16px;
+        padding: 16px;
+      }
+      .card h3 { margin: 0 0 8px; font-size: 16px; }
+      .card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+      .latest {
+        margin-top: 24px;
+        padding: 16px;
+        border-radius: 14px;
+        border: 1px dashed #2a3344;
+        background: #0f131b;
+      }
+      .latest a { color: var(--accent-2); text-decoration: none; }
+      .footer { margin-top: 40px; color: var(--muted); font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Your Hacking Daily News</h1>
+        <div class="tagline">A magazine-style security digest with advisories, exploits, and research. Fresh every morning.</div>
+        <div class="chips">
+          <span class="chip">Daily Issue</span>
+          <span class="chip">Weekly Recap (Sun)</span>
+          <span class="chip">Analyst Pick</span>
+          <span class="chip">Fast Facts</span>
+        </div>
+        <div class="cta">
+          <a class="btn primary" id="latest-link" href="#">Open Latest Issue</a>
+          <a class="btn" href="https://github.com/flippits/Your-Hacking-Daily-News">View Repo</a>
+          <a class="btn" href="https://github.com/flippits/Your-Hacking-Daily-News/tree/main/News">Browse News</a>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Top Stories</h3>
+          <p>The headlines and incidents you should not miss.</p>
+        </div>
+        <div class="card">
+          <h3>Vulns & Patches</h3>
+          <p>Fix-first advisories and mitigation notes.</p>
+        </div>
+        <div class="card">
+          <h3>Research & Exploits</h3>
+          <p>Deep dives, PoCs, and threat intel.</p>
+        </div>
+        <div class="card">
+          <h3>Weekly Recap</h3>
+          <p>Every Sunday, a full-week summary drops.</p>
+        </div>
+      </div>
+
+      <div class="latest" id="latest">
+        Loading latest issue...
+      </div>
+
+      <div class="footer">Generated from the public repo. GitHub Pages must be enabled in repo settings (docs/).</div>
+    </div>
+
+    <script>
+      const repo = "flippits/Your-Hacking-Daily-News";
+      const newsPath = "News";
+      const latestEl = document.getElementById("latest");
+      const latestLink = document.getElementById("latest-link");
+
+      async function loadLatest() {
+        try {
+          const res = await fetch(`https://api.github.com/repos/${repo}/contents/${newsPath}`);
+          const data = await res.json();
+          const folders = data
+            .filter((item) => item.type === "dir")
+            .map((item) => item.name)
+            .sort()
+            .reverse();
+          const latest = folders[0];
+          if (!latest) {
+            latestEl.textContent = "No issues yet.";
+            return;
+          }
+          const url = `https://github.com/${repo}/tree/main/${newsPath}/${latest}`;
+          latestEl.innerHTML = `Latest issue: <a href="${url}">${latest}</a>`;
+          latestLink.href = url;
+        } catch (err) {
+          latestEl.textContent = "Could not load latest issue.";
+        }
+      }
+      loadLatest();
+    </script>
+  </body>
+</html>
